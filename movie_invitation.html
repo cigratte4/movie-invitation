@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>观影邀请函</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(154,52,18,.35), transparent 32%),
+      radial-gradient(circle at 80% 25%, rgba(91,33,182,.26), transparent 30%),
+      radial-gradient(circle at 60% 80%, rgba(190,24,93,.20), transparent 32%),
+      linear-gradient(135deg,#140f1f 0%, #0a0a14 45%, #1a1025 100%);
+    color:#fff;
+}
+
+.glow{
+    position:absolute;
+    width:900px;
+    height:900px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(251,191,36,.08), transparent 60%);
+    filter:blur(10px);
+    animation:breathe 5s infinite ease-in-out;
+}
+@keyframes breathe{
+    50%{transform:scale(1.05); opacity:.85}
+}
+
+.film{
+    position:absolute;
+    width:720px;
+    height:720px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:50%;
+    animation:rotate 36s linear infinite;
+    box-shadow:0 0 120px rgba(244,114,182,.05) inset;
+}
+@keyframes rotate{
+    to{transform:rotate(360deg)}
+}
+
+.star{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:#fdf2f8;
+    border-radius:50%;
+    animation:twinkle 3s infinite ease-in-out;
+}
+@keyframes twinkle{
+    50%{opacity:.2;transform:scale(1.8)}
+}
+
+.card{
+    position:relative;
+    z-index:2;
+    width:475px;
+    padding:50px 42px 44px;
+    border-radius:30px;
+    background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.07));
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 24px 60px rgba(0,0,0,.48), 0 0 30px rgba(251,191,36,.10);
+    text-align:center;
+    animation:fade 1.2s ease;
+}
+@keyframes fade{
+    from{opacity:0;transform:translateY(40px)}
+    to{opacity:1;transform:none}
+}
+
+.title{
+    letter-spacing:4px;
+    font-size:14px;
+    color:#fbcfe8;
+    margin-bottom:18px;
+    text-transform:uppercase;
+}
+
+h1{
+    font-size:34px;
+    margin-bottom:24px;
+    color:#fff7ed;
+    text-shadow:0 0 16px rgba(251,191,36,.14);
+}
+
+.movie{
+    font-size:30px;
+    color:#fbbf24;
+    font-weight:bold;
+    text-shadow:0 0 22px rgba(251,191,36,.35);
+    margin-bottom:28px;
+}
+
+.content{
+    font-size:17px;
+    line-height:2;
+    color:#f8fafc;
+}
+
+.detail{
+    margin:28px 0;
+    padding:18px;
+    border-radius:18px;
+    background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+    line-height:1.9;
+    color:#e9d5ff;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.actions{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    display:inline-block;
+    min-width:140px;
+    padding:13px 24px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:.3s;
+    cursor:pointer;
+    border:none;
+    font-size:16px;
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,#fbbf24,#fb7185);
+    color:#1f1726;
+    box-shadow:0 8px 24px rgba(251,113,133,.22);
+}
+.btn-primary:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 28px rgba(251,113,133,.30);
+}
+
+.btn-secondary{
+    background:rgba(255,255,255,.08);
+    color:#f8fafc;
+    border:1px solid rgba(255,255,255,.16);
+}
+.btn-secondary:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,.14);
+}
+
+.btn-static{
+    cursor:default !important;
+    opacity:.92;
+    transform:none !important;
+    box-shadow:none !important;
+}
+.btn-static:hover{
+    transform:none !important;
+    box-shadow:none !important;
+    background:inherit;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(3,4,12,.72);
+    z-index:20;
+    opacity:0;
+    transition:opacity .45s ease;
+}
+.overlay.show{
+    display:flex;
+    opacity:1;
+}
+.overlay-content{
+    position:relative;
+    width:min(90vw,520px);
+    min-height:320px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+}
+
+.countdown-box{
+    animation:fadeUp .6s ease;
+}
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(16px)}
+    to{opacity:1;transform:none}
+}
+.countdown-icon{
+    font-size:40px;
+    margin-bottom:14px;
+    opacity:.9;
+}
+.countdown-label{
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#d8b4fe;
+    font-size:14px;
+    margin-bottom:18px;
+}
+.countdown-num{
+    font-size:110px;
+    line-height:1;
+    color:#fbbf24;
+    text-shadow:0 0 28px rgba(251,191,36,.38);
+    font-weight:700;
+    min-height:120px;
+}
+.countdown-sub{
+    margin-top:20px;
+    color:#f8fafc;
+    font-size:18px;
+    letter-spacing:1px;
+}
+.countdown-movie{
+    margin-top:12px;
+    font-size:28px;
+    color:#fda4af;
+    text-shadow:0 0 18px rgba(251,113,133,.28);
+}
+
+.ticket-wrap{
+    display:none;
+    width:100%;
+    justify-content:center;
+    align-items:center;
+    animation:ticketRise .7s ease forwards;
+}
+.ticket-wrap.show{display:flex}
+@keyframes ticketRise{
+    from{opacity:0;transform:translateY(40px) scale(.95)}
+    to{opacity:1;transform:none}
+}
+.ticket{
+    position:relative;
+    width:min(92vw,420px);
+    padding:30px 28px 24px;
+    border-radius:24px;
+    color:#2b1c07;
+    background:
+      radial-gradient(circle at top left, rgba(255,255,255,.65), rgba(255,255,255,0) 28%),
+      linear-gradient(180deg,#ffe8a3,#ffd977 55%, #f6c95d 100%);
+    box-shadow:0 20px 50px rgba(0,0,0,.35), 0 0 40px rgba(251,191,36,.18);
+    overflow:hidden;
+}
+.ticket:before,.ticket:after{
+    content:"";
+    position:absolute;
+    top:50%;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:rgba(3,4,12,.72);
+    transform:translateY(-50%);
+}
+.ticket:before{left:-15px}
+.ticket:after{right:-15px}
+.ticket-top{
+    font-size:14px;
+    letter-spacing:3px;
+    color:#7c4a03;
+    margin-bottom:14px;
+}
+.ticket-title{
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+.ticket-movie{
+    font-size:26px;
+    margin-bottom:12px;
+}
+.ticket-line{
+    margin:18px 0;
+    border-top:2px dashed rgba(84,48,3,.35);
+}
+.ticket-text{
+    line-height:1.9;
+    font-size:17px;
+}
+.ticket-stamp{
+    margin-top:18px;
+    display:inline-block;
+    padding:8px 18px;
+    border:2px solid rgba(120,53,15,.55);
+    border-radius:999px;
+    transform:rotate(-6deg);
+    color:#7c2d12;
+    font-weight:700;
+    letter-spacing:1px;
+    background:rgba(255,255,255,.25);
+}
+.ticket-actions{
+    margin-top:22px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.sparkles{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+.sparkles span{
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:radial-gradient(circle,#fff7d1,#fbbf24);
+    box-shadow:0 0 12px rgba(251,191,36,.4);
+    animation:particle 2.6s ease-in-out infinite;
+    opacity:.8;
+}
+@keyframes particle{
+    0%{transform:translateY(20px) scale(.7); opacity:0}
+    20%{opacity:1}
+    100%{transform:translateY(-120px) scale(1.4); opacity:0}
+}
+
+.reject-panel{
+    width:min(92vw,430px);
+    padding:34px 28px 28px;
+    border-radius:28px;
+    background:linear-gradient(180deg, rgba(16,22,43,.78), rgba(20,17,38,.85));
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 18px 50px rgba(0,0,0,.4);
+    animation:fadeUp .7s ease;
+    position:relative;
+    overflow:hidden;
+}
+.reject-stars{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+}
+.reject-stars i{
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:#fef3c7;
+    animation:softTwinkle 3.2s infinite ease-in-out;
+}
+@keyframes softTwinkle{
+    50%{opacity:.25; transform:scale(1.9)}
+}
+.reject-icon{
+    font-size:38px;
+    margin-bottom:14px;
+}
+.reject-title{
+    font-size:30px;
+    color:#f8fafc;
+    margin-bottom:14px;
+}
+.reject-text{
+    color:#dbe4f2;
+    line-height:1.95;
+    font-size:17px;
+}
+.reject-actions{
+    margin-top:22px;
+    display:flex;
+    justify-content:center;
+}
+
+.mini-btn{
+    padding:11px 24px;
+    border:none;
+    border-radius:999px;
+    font-weight:700;
+    cursor:pointer;
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    transition:.25s;
+}
+.mini-btn:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,.18);
+}
+.mini-btn.gold{
+    background:linear-gradient(135deg,#fbbf24,#fb7185);
+    color:#25160e;
+}
+.mini-btn.gold:hover{
+    box-shadow:0 8px 18px rgba(251,113,133,.28);
+}
+
+@media (max-width:560px){
+    .card{
+        width:92vw;
+        padding:38px 24px 34px;
+    }
+    h1{font-size:28px}
+    .movie{font-size:25px}
+    .content{font-size:16px}
+    .detail{font-size:15px}
+    .countdown-num{font-size:92px}
+}
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+<div class="film"></div>
+
+<div class="star" style="left:15%;top:20%"></div>
+<div class="star" style="left:80%;top:25%"></div>
+<div class="star" style="left:25%;top:75%"></div>
+<div class="star" style="left:85%;top:70%"></div>
+<div class="star" style="left:10%;top:55%"></div>
+<div class="star" style="left:72%;top:12%"></div>
+<div class="star" style="left:58%;top:16%"></div>
+<div class="star" style="left:33%;top:30%"></div>
+
+<div class="card">
+    <div class="title">🎬 Movie Night Invitation</div>
+    <h1>诚邀您共赴一场光影之旅</h1>
+    <div class="movie">《神探之痕迹》</div>
+
+    <div class="content">
+        听闻此片值得一观，<br>
+        特此发出观影邀请，<br>
+        诚邀你于今晚一同品鉴。
+    </div>
+
+    <div class="detail">
+        🍿 时间：今晚<br>
+        🎞️ 影片：《神探之痕迹》<br>
+        📍 影院及场次：共同商议
+    </div>
+
+    <div id="actions" class="actions">
+        <button id="acceptBtn" class="btn btn-primary" onclick="startAcceptFlow()">欣然赴约</button>
+        <button id="declineBtn" class="btn btn-secondary" onclick="showRejectFlow()">改日再约</button>
+    </div>
+</div>
+
+<div id="acceptOverlay" class="overlay" aria-hidden="true">
+    <div class="overlay-content">
+        <div id="countdownBox" class="countdown-box">
+            <div class="countdown-icon">🎞️</div>
+            <div class="countdown-label">Preparing Movie Night</div>
+            <div id="countdownNum" class="countdown-num">3</div>
+            <div class="countdown-sub">观影邀请确认中</div>
+            <div class="countdown-movie">《神探之痕迹》</div>
+        </div>
+
+        <div id="ticketWrap" class="ticket-wrap">
+            <div class="ticket">
+                <div class="sparkles">
+                    <span style="left:12%; bottom:18%; animation-delay:0s"></span>
+                    <span style="left:25%; bottom:8%; animation-delay:.4s"></span>
+                    <span style="left:46%; bottom:10%; animation-delay:.9s"></span>
+                    <span style="left:62%; bottom:18%; animation-delay:1.3s"></span>
+                    <span style="left:78%; bottom:10%; animation-delay:.6s"></span>
+                    <span style="left:88%; bottom:20%; animation-delay:1.7s"></span>
+                </div>
+                <div class="ticket-top">MOVIE CONFIRMATION</div>
+                <div class="ticket-title">🎬 观影确认函</div>
+                <div class="ticket-movie">《神探之痕迹》</div>
+                <div class="ticket-line"></div>
+                <div class="ticket-text">
+                    很高兴与你共同品鉴<br>
+                    今晚的光影之旅已确认
+                </div>
+                <div class="ticket-line"></div>
+                <div class="ticket-text">
+                    期待今晚与你相见
+                </div>
+                <div class="ticket-stamp">✓ CONFIRMED</div>
+
+                <div class="ticket-actions">
+                    <button class="mini-btn gold" onclick="finalizeAccept()">收下邀请函</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="rejectOverlay" class="overlay" aria-hidden="true">
+    <div class="overlay-content">
+        <div class="reject-panel">
+            <div class="reject-stars">
+                <i style="left:8%;top:14%;animation-delay:0s"></i>
+                <i style="left:20%;top:26%;animation-delay:.7s"></i>
+                <i style="left:34%;top:10%;animation-delay:1.1s"></i>
+                <i style="left:48%;top:22%;animation-delay:1.8s"></i>
+                <i style="left:67%;top:12%;animation-delay:.5s"></i>
+                <i style="left:79%;top:28%;animation-delay:1.4s"></i>
+                <i style="left:88%;top:16%;animation-delay:2s"></i>
+                <i style="left:12%;top:72%;animation-delay:1.2s"></i>
+                <i style="left:28%;top:82%;animation-delay:.8s"></i>
+                <i style="left:53%;top:76%;animation-delay:1.6s"></i>
+                <i style="left:75%;top:84%;animation-delay:2.1s"></i>
+            </div>
+            <div class="reject-icon">🌙</div>
+            <div class="reject-title">邀请暂存</div>
+            <div class="reject-text">
+                没关系，今晚暂且作罢。<br>
+                期待未来某个合适的夜晚，<br>
+                再次开启一场电影之旅。
+            </div>
+            <div class="reject-actions">
+                <button class="mini-btn" onclick="finalizeReject()">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let countdownTimer = null;
+let countdownValue = 3;
+let invitationState = "pending"; // pending | accepted | declined
+
+function showOverlay(el){
+    el.style.display = 'flex';
+    requestAnimationFrame(() => el.classList.add('show'));
+}
+function hideOverlay(el){
+    el.classList.remove('show');
+    setTimeout(() => { el.style.display = 'none'; }, 420);
+}
+
+function setAcceptedMainState(){
+    const actions = document.getElementById('actions');
+    actions.innerHTML = `
+        <button class="btn btn-primary btn-static" disabled>已确认赴约</button>
+    `;
+}
+
+function setDeclinedMainState(){
+    const actions = document.getElementById('actions');
+    actions.innerHTML = `
+        <button class="btn btn-secondary btn-static" disabled>改日再约</button>
+    `;
+}
+
+function sendFeedback(result){
+    fetch("https://script.google.com/macros/s/AKfycbzCjZ5YtVuKONMpToKoMMTSiWf1P0bnD4rTdslZiPwlOgRnGC114hNuPhi_juFAEZ_F/exec?result=" + encodeURIComponent(result))
+    .catch(()=>{});
+}
+
+function startAcceptFlow(){
+    if(invitationState !== "pending") return;
+    sendFeedback("欣然赴约");
+
+    const overlay = document.getElementById('acceptOverlay');
+    const countdownBox = document.getElementById('countdownBox');
+    const ticketWrap = document.getElementById('ticketWrap');
+    const countdownNum = document.getElementById('countdownNum');
+
+    countdownValue = 3;
+    countdownNum.textContent = countdownValue;
+    countdownBox.style.display = 'block';
+    ticketWrap.classList.remove('show');
+    ticketWrap.style.display = 'none';
+
+    showOverlay(overlay);
+
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+        countdownValue--;
+        if(countdownValue > 0){
+            countdownNum.textContent = countdownValue;
+        }else{
+            clearInterval(countdownTimer);
+            countdownNum.textContent = '✓';
+            setTimeout(() => {
+                countdownBox.style.display = 'none';
+                ticketWrap.style.display = 'flex';
+                setTimeout(() => ticketWrap.classList.add('show'), 20);
+            }, 500);
+        }
+    }, 850);
+}
+
+function finalizeAccept(){
+    invitationState = "accepted";
+    setAcceptedMainState();
+    hideOverlay(document.getElementById('acceptOverlay'));
+}
+
+function showRejectFlow(){
+    if(invitationState !== "pending") return;
+    sendFeedback("改日再约");
+    showOverlay(document.getElementById('rejectOverlay'));
+}
+
+function finalizeReject(){
+    invitationState = "declined";
+    setDeclinedMainState();
+    hideOverlay(document.getElementById('rejectOverlay'));
+}
+
+window.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+        if(invitationState === "pending"){
+            hideOverlay(document.getElementById('acceptOverlay'));
+            hideOverlay(document.getElementById('rejectOverlay'));
+        }
+    }
+});
+
+document.getElementById('acceptOverlay').addEventListener('click', function(e){
+    if(e.target === this && invitationState === "pending"){
+        hideOverlay(this);
+    }
+});
+document.getElementById('rejectOverlay').addEventListener('click', function(e){
+    if(e.target === this && invitationState === "pending"){
+        hideOverlay(this);
+    }
+});
+</script>
+
+</body>
+</html>
